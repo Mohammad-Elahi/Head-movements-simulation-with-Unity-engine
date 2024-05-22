@@ -1,6 +1,6 @@
 # Head Motion Simulator in Unity
 
-This project uses the Unity engine to simulate head movements. A cube is created in Unity and attached with a C# script that reads a CSV file named `head_motion.csv`. This file includes time and x, y, z positions and qx, qy, qz, qw orientations.
+This project uses the Unity engine to simulate head motions. A cube is created in Unity and attached with a C# script that reads a CSV file named `head_motion.csv`. This file includes time and x, y, z positions and qx, qy, qz, qw orientations.
 
 ## license
 This project is licensed under the MIT License - see the LICENSE.md file for details.
