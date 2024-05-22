@@ -1,5 +1,8 @@
-# Head Motion Simulator in Unity
+# [Head Motion Simulator in Unity](https://github.com/Mohammad-Elahi/Head-movements-simulation-with-Unity-engine)
 
+![Head Motion s](https://github.com/Mohammad-Elahi/Head-movements-simulation-with-Unity-engine/assets/93424032/f080572e-ec33-4656-a009-5650eb8bc594)
+
+# Description
 This project uses the Unity engine to simulate head motions. A cube is created in Unity and attached with a C# script that reads a CSV file named `head_motion.csv`. This file includes time and x, y, z positions and qx, qy, qz, qw orientations.
 
 ## license
@@ -85,3 +88,5 @@ Note: Replace the `your_head_motion.csv_path` with the path of your `head_motion
 
 # Author
 Mohammad Elahi, TU Dresden, Vodafone Chair, mohammad.elahi@mailbox.tu-dresden.de
+
+
