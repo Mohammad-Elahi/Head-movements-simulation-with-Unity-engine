@@ -13,7 +13,7 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 1. Clone the repository.
 2. Open the project in Unity Editor.
-3. Replace the `csvFilePath` in the `HeadMotionSimulator.cs` script with the path of your `head_motion.csv` file.
+3. Replace the `csvFilePath` in the `HeadMotionSimulator.cs` script in the Assets with the path of your `head_motion.csv` file.
 
 ## Code Overview
 
