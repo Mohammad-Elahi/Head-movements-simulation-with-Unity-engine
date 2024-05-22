@@ -82,3 +82,6 @@ public class HeadMotionData
 }
 ```
 Note: Replace the `your_head_motion.csv_path` with the path of your `head_motion.csv` file.
+
+# Author
+Mohammad Elahi, TU Dresden, Vodafone Chair, mohammad.elahi@mailbox.tu-dresden.de
