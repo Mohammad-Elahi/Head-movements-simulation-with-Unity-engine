@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class HeadMotionSimulator : MonoBehaviour
 {
-    public string csvFilePath = "C:/Users/mohammad.elahi/Unity3D3/head_motion2.csv";
+    public string csvFilePath = "your_head_motion.csv_path";
     private List<HeadMotionData> motionData;
     private float timeBetweenRows = 0.001f; // 1 millisecond
 
