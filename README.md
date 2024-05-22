@@ -1,103 +1,84 @@
-![Head Tracking](https://github.com/Mohammad-Elahi/Meta-Quest-Head-Tracking-App/assets/93424032/22a50174-a7da-4197-bb39-1e271f70f2bf)
-# Meta-Quest-Head-Tracking-App
-Meta Quest Head Tracking App
+# Head Motion Simulator in Unity
+
+This project uses the Unity engine to simulate head movements. A cube is created in Unity and attached with a C# script that reads a CSV file named `head_motion.csv`. This file includes time and x, y, z positions and qx, qy, qz, qw orientations.
+
+## license
+This project is licensed under the MIT License - see the LICENSE.md file for details.
+
+## Prerequisites
+
+- Unity Editor version 2022.3.19f1. If you want to download the repository and run it in your Unity, you should adjust your Unity editor version to 2022.3.19f1. Alternatively, you can use the instructions and C# code with your own Unity editor version.
 
 ## Setup
-1. Connect your Quest headset to a Windows PC with a USB-C cable and set up Meta Quest Link. You can find the setup instructions [here](https://www.meta.com/en-gb/help/quest/articles/headsets-and-accessories/oculus-link/set-up-link/)
-2. Download the Oculus SDK for Windows from [here](https://developer.oculus.com/downloads/package/oculus-sdk-for-windows/)
-3. Create a project folder and name it "MetaApp".  
-4. Copy the LibOVR library from the Oculus SDK folder to the MetaApp folder.
 
-## Project Files
-1. Create a Text Document and name it "CMakeLists.txt".
-2. Create a C++ source file and name it "main.cpp".
-3. Create a new folder in the MetaApp folder and name it "build".
+1. Clone the repository.
+2. Open the project in Unity Editor.
+3. Replace the `csvFilePath` in the `HeadMotionSimulator.cs` script with the path of your `head_motion.csv` file.
 
-   
-## CMakeLists.txt
-Write the following code in CMakeLists.txt. Make sure to set your LibOVR path correctly:
-```
-cmake_minimum_required(VERSION 3.10)
-project(MetaApp)
+## Code Overview
 
-set(CMAKE_CXX_STANDARD 14)
-            
-#Specify the path to your LibOVR installation
-set(LIBOVR_PATH C:/Users/your_LibOVR_folder_path)
+The main script `HeadMotionSimulator.cs` reads the `head_motion.csv` file and simulates the head movements based on the data. The `HeadMotionData` class is used to store the data for each row in the CSV file.
 
-include_directories(${LIBOVR_PATH}/Include)
-link_directories(${LIBOVR_PATH}/Lib/Windows/x64/Release/VS2017)
+```csharp
+using UnityEngine;
+using System.Collections;
+using System.IO;
+using System.Collections.Generic;
 
-add_executable(MetaApp main.cpp)
-target_link_libraries(MetaApp LibOVR)
-```
+public class HeadMotionSimulator : MonoBehaviour
+{
+    public string csvFilePath = "your_head_motion.csv_path";
+    private List<HeadMotionData> motionData;
+    private float timeBetweenRows = 0.001f; // 1 millisecond
 
-# main.cpp
-Write the following code in main.cpp:
-
-```
-    #include <OVR_CAPI.h>
-    #include <iostream>
-    
-        int main() {
-           std::cout << "Starting program...\n";
-
-       if (ovr_Initialize(nullptr) == ovrSuccess) {
-        std::cout << "LibOVR initialized successfully.\n";
-
-        ovrSession session;
-        ovrGraphicsLuid luid;
-        ovrResult result = ovr_Create(&session, &luid);
-
-        if (result == ovrSuccess) {
-            std::cout << "Session created successfully.\n";
-
-            while (true) {
-                ovrTrackingState ts = ovr_GetTrackingState(session, ovr_GetTimeInSeconds(), true);
-                if (ts.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
-                    ovrPosef pose = ts.HeadPose.ThePose;
-                    std::cout << "Position: (" << pose.Position.x << ", " << pose.Position.y << ", " << pose.Position.z << ")\n";
-                    std::cout << "Orientation: (" << pose.Orientation.x << ", " << pose.Orientation.y << ", " << pose.Orientation.z << ", " << pose.Orientation.w << ")\n";
+    private List<HeadMotionData> ReadCSVFile(string filePath)
+    {
+        List<HeadMotionData> data = new List<HeadMotionData>();
+        if (File.Exists(filePath))
+        {
+            // Read the lines of the .csv file
+            string[] lines = File.ReadAllLines(filePath);
+            for (int i = 1; i < lines.Length; i++) // Start from 1 to skip the header
+            {
+                string[] values = lines[i].Split(',');
+                if (values.Length >= 8) // Ensure all columns are present
+                {
+                    HeadMotionData motion = new HeadMotionData();
+                    // Parse and assign the values to the HeadMotionData object
+                    motion.time = float.Parse(values[0]);
+                    motion.x = float.Parse(values[1]);
+                    motion.y = float.Parse(values[2]);
+                    motion.z = float.Parse(values[3]);
+                    motion.qx = float.Parse(values[4]);
+                    motion.qy = float.Parse(values[5]);
+                    motion.qz = float.Parse(values[6]);
+                    motion.qw = float.Parse(values[7]);
+                    data.Add(motion);
+                }
+                else
+                {
+                    Debug.LogError("Invalid data in the .csv file at line " + (i + 1));
                 }
             }
-            ovr_Destroy(session);
-        } else {
-            std::cout << "Failed to create session. Error: " << result << "\n";
         }
-        ovr_Shutdown();
-    } else {
-        std::cout << "Failed to initialize LibOVR.\n";
+        else
+        {
+            Debug.LogError("File not found: " + filePath);
+        }
+        return data;
     }
-    return 0;
+}
+
+public class HeadMotionData
+{
+    public float time;
+    public float x;
+    public float y;
+    public float z;
+    public float qx;
+    public float qy;
+    public float qz;
+    public float qw;
 }
 ```
-# Build
-1. Download and install CMake from [here](https://cmake.org/download/)
-2. Open CMake and click “Browse Source”, then choose the MetaApp folder.
-3. Click “Browse Build” and choose the “build” folder in the MetaApp folder.
-4. Click on “Generate”.
-5. Open the Command Prompt (CMD) on your windows and navigate to the “build” folder with this command:
-```
-cd C:\Users\your_build_folder_path
-```
-6. Compile the project:
-```
-cmake --build .
-```
-7. After the build process is complete, you should see your “Debug” folder in the build directory which includes MetaApp.exe.
-8. You can run the application directly from the command line:
-```
-cd Debug
-```
-```
-.\MetaApp.exe
-```
-Note: Instead of steps 1 to 4, you can open CMD, navigate to your “build” directory, and write:
-```
-cd C:\Users\your_build_folder_path
-```
-```
-cmake ..
-```
-
-Please replace `your_LibOVR_folder_path` and `your_build_folder_path` with the actual paths on your system.
+Note: Replace the `your_head_motion.csv_path` with the path of your `head_motion.csv` file.
